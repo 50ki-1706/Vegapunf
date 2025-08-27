@@ -1,0 +1,15 @@
+{
+    "python.defaultInterpreterPath": "/home/tiyo5151/web/fastapi-project/Vagapunf/backend/venv/bin/python",
+    "python.analysis.extraPaths": [
+        "/home/tiyo5151/web/fastapi-project/Vagapunf/backend/venv/lib/python3.10/site-packages"
+    ],
+    "python.autoComplete.extraPaths": [
+        "/home/tiyo5151/web/fastapi-project/Vagapunf/backend/venv/lib/python3.10/site-packages"
+    ],
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "pyrefly.lspPath": "/home/tiyo5151/web/fastapi-project/Vagapunf/backend/venv/bin/python",
+    "ty.path": [
+        "/home/tiyo5151/web/fastapi-project/Vagapunf/backend/venv/lib/python3.10/site-packages"
+    ]
+}
