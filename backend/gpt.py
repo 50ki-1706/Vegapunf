@@ -4,12 +4,20 @@ import requests
 import settings
 
 
-def call_chat_completions(messages: list[dict]):
+def call_chat_completions(
+    messages: list[dict],
+    tools: list = None,
+    tool_choice: str = "auto",
+    response_format: str = "text",
+):
     """
     OpenAIのChat Completions APIを呼び出す関数
 
     Args:
-        messages (list[dict]): OpenAI APIに送信するメッセージのリスト
+        messages (list[dict]): APIに送信するメッセージのリスト
+        tools (list, optional): AIが利用可能なツール（関数）のリスト. Defaults to None.
+        tool_choice (str, optional): ツールの使用を制御. "auto", "none", or {"type": "function", ...}. Defaults to "auto".
+        response_format (str, optional): レスポンス形式 ("text" or "json_object"). Defaults to "text".
 
     Returns:
         dict: APIからのレスポンス(JSON)
@@ -31,6 +39,15 @@ def call_chat_completions(messages: list[dict]):
         "model": "gpt-4o-mini",
         "messages": messages,
     }
+
+    # Tool Callingのパラメータを追加
+    if tools:
+        request_data["tools"] = tools
+        request_data["tool_choice"] = tool_choice
+
+    # レスポンス形式を指定
+    if response_format == "json_object":
+        request_data["response_format"] = {"type": "json_object"}
 
     # リクエストの送信 (json引数を使うと自動でJSONに変換される)
     response = requests.post(url, headers=headers, json=request_data)
