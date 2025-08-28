@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import './Pamphlet.css';
+import './pamphlet.css';
 
 const PamphletPage = () => {
   // React Router の location.state からデータを受け取る
