@@ -51,7 +51,7 @@ const PamphletPage = () => {
 
   return (
     <div className="pamphlet-page">
-      <h1>パンフレットプレビュー</h1>
+      <h1>プレビュー</h1>
       <div className="pamphlet-container" ref={pamphletRef}>
         {/* 表紙 */}
         <div className="pamphlet-cover">

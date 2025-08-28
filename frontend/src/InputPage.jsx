@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import './InputPage.css';
 
 const InputPage = () => {
   const navigate = useNavigate();
@@ -69,8 +70,8 @@ const InputPage = () => {
 
   return (
     <div style={{ maxWidth: "600px", margin: "2rem auto", padding: "1rem" }}>
-      <h2>パンフレット作成フォーム</h2>
-
+      <h2>ベガパンフ</h2>
+      <p id="exp">観光地名とジャンルを選択して、オリジナルパンフレットを作成しましょう！</p>
       {/* 観光地入力 */}
       <div style={{ marginBottom: "1rem" }}>
         <label>
@@ -79,7 +80,7 @@ const InputPage = () => {
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            placeholder="例：京都"
+            placeholder="東京タワー"
             style={{ marginLeft: "0.5rem", padding: "0.5rem", width: "70%" }}
           />
         </label>
@@ -100,7 +101,7 @@ const InputPage = () => {
                   padding: "0.5rem 1rem",
                   border: "1px solid #333",
                   borderRadius: "4px",
-                  backgroundColor: isSelected ? "#4caf50" : "#f0f0f0",
+                  backgroundColor: isSelected ? "#5fe08aff" : "#f0f0f0",
                   color: isSelected ? "#fff" : "#000",
                   cursor: "pointer",
                 }}
@@ -125,7 +126,7 @@ const InputPage = () => {
           style={{
             padding: "0.75rem 1.5rem",
             fontSize: "1rem",
-            backgroundColor: "#007bff",
+            backgroundColor: "#5ca7f7ff",
             color: "#fff",
             border: "none",
             borderRadius: "4px",
