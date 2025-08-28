@@ -13,7 +13,7 @@ const InputPage = () => {
   const [error, setError] = useState(null);
 
   // ジャンルの候補
-  const genres = ["自然", "歴史文化", "グルメ", "アクティビティ", "温泉", "イベント", "美術館", "ショッピング"];
+  const genres = ["自然", "歴史・文化", "グルメ", "アクティビティ", "癒し", "イベント", "動植物", "ショッピング"];
 
   // ジャンルボタンクリック時のトグル処理
   const handleGenreClick = (genre) => {
