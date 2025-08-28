@@ -1,0 +1,135 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.pamphlet-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.pamphlet-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.pamphlet-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  color: #333;
+}
+
+.pamphlet-section {
+  margin-bottom: 1.5rem;
+}
+
+.pamphlet-section h2 {
+  font-size: 1.8rem;
+  color: #555;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.pamphlet-section p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #666;
+}
+
+.pamphlet-section ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.pamphlet-section ul li {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: #666;
+}
+
+.pamphlet-footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #999;
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+}
+
+.pamphlet-footer a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.pamphlet-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .pamphlet-container {
+    padding: 0.5rem;
+    margin: 1rem;
+  }
+
+  .pamphlet-header h1 {
+    font-size: 2rem;
+  }
+
+  .pamphlet-section h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media print {
+  body {
+    background: white;
+  }
+  .pamphlet-container {
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+  }
+}
+
+/* Additional styles for PDF generation */
+.pamphlet-pdf {
+  width: 210mm; /* A4 width */
+  min-height: 297mm; /* A4 height */
+  padding: 20mm;
+  box-sizing: border-box;
+  background: white;
+}
+
+.pamphlet-pdf .pamphlet-header,
+.pamphlet-pdf .pamphlet-section,
+.pamphlet-pdf .pamphlet-footer {
+  margin-bottom: 1.5rem;
+} 
+
+.pamphlet-pdf .pamphlet-header h1 {
+  font-size: 24pt;
+}
+
+.pamphlet-pdf .pamphlet-section h2 {
+  font-size: 18pt;
+}
+
+.pamphlet-pdf .pamphlet-section p,
+.pamphlet-pdf .pamphlet-section ul li {
+  font-size: 12pt;
+  line-height: 1.5;
+}
+
+.pamphlet-pdf .pamphlet-footer {
+  font-size: 10pt;
+}
+
+.pamphlet-pdf .pamphlet-footer a {
+  color: #007bff;
+}
+
