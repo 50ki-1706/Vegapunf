@@ -1,88 +1,117 @@
 import { useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import './pamphlet.css';
 
 const PamphletPage = () => {
-  // React Router の location.state からデータを受け取る
   const location = useLocation();
-  const data = location.state?.pamphletData || {
-    title: 'サンプルタイトル',
-    coverImage: 'https://via.placeholder.com/600x400',
-    description: 'ここに説明文が入ります。',
-    sections: [
-      {
-        heading: 'セクション1',
-        text: 'テキスト本文1...',
-        image: 'https://via.placeholder.com/300x200',
-      },
-      {
-        heading: 'セクション2',
-        text: 'テキスト本文2...',
-        image: 'https://via.placeholder.com/300x200',
-      },
-    ],
-  };
-
-  // PDF に変換する対象の DOM
+  const pamphletData = location.state?.pamphletData;
   const pamphletRef = useRef(null);
+
+  if (!pamphletData) {
+    return (
+      <div className="pamphlet-page loading">
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>パンフレットデータを読み込んでいます...</p>
+          <p>
+            データが表示されない場合は、
+            <Link to="/">入力ページ</Link>
+            に戻ってください。
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const data = {
+    title: pamphletData.title,
+    description: pamphletData.introduction,
+    sections: pamphletData.spots.map((spot) => ({
+      heading: spot.name,
+      text: spot.ai_description,
+    })),
+  };
 
   const handleExportPDF = async () => {
     if (!pamphletRef.current) return;
-    // html2canvas でキャプチャ
-    const canvas = await html2canvas(pamphletRef.current, { scale: 2 });
+    // PDF出力時にスタイルが適用されるように、一時的にクラスを追加
+    pamphletRef.current.classList.add('pdf-export-mode');
+
+    const canvas = await html2canvas(pamphletRef.current, {
+      scale: 2,
+      useCORS: true,
+      windowWidth: pamphletRef.current.scrollWidth,
+      windowHeight: pamphletRef.current.scrollHeight,
+    });
+
+    pamphletRef.current.classList.remove('pdf-export-mode');
+
     const imgData = canvas.toDataURL('image/png');
-    // jsPDF で PDF 化
     const pdf = new jsPDF({
-      unit: 'pt', // pt = point (1/72 inch)
-      format: 'a4', // A4 サイズ
+      unit: 'pt',
+      format: 'a4',
       orientation: 'portrait',
     });
+
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    // 画像サイズを調整（A4 にフィットさせる）
     const imgProps = pdf.getImageProperties(imgData);
     const imgWidth = pageWidth;
-    const imgHeight = (imgProps.height * pageWidth) / imgProps.width;
-    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+    const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+
     pdf.save(`${data.title || 'pamphlet'}.pdf`);
   };
 
   return (
     <div className="pamphlet-page">
-      <h1>パンフレットプレビュー</h1>
-      <div className="pamphlet-container" ref={pamphletRef}>
-        {/* 表紙 */}
-        <div className="pamphlet-cover">
-          <img src={data.coverImage} alt="cover" />
-          <h2 className="pamphlet-title">{data.title}</h2>
-        </div>
+      <header className="pamphlet-header">
+        <h1>パンフレットプレビュー</h1>
+        <button className="btn-export" onClick={handleExportPDF}>
+          PDFをダウンロード
+        </button>
+      </header>
 
-        {/* 説明文 */}
-        <div className="pamphlet-description">
-          <p>{data.description}</p>
-        </div>
+      <main className="pamphlet-main">
+        <div className="pamphlet-container" ref={pamphletRef}>
+          <div className="pamphlet-cover">
+            <h2 className="pamphlet-title">{data.title}</h2>
+          </div>
 
-        {/* セクション一覧 */}
-        <div className="pamphlet-sections">
-          {data.sections.map((sec, idx) => (
-            <div className="section-card" key={idx}>
-              <div className="section-img">
-                <img src={sec.image} alt={`section-${idx}`} />
-              </div>
-              <div className="section-text">
-                <h3>{sec.heading}</h3>
-                <p>{sec.text}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+          {data.description && (
+            <section className="pamphlet-section description-section">
+              <p>{data.description}</p>
+            </section>
+          )}
 
-      <button className="btn-export" onClick={handleExportPDF}>
-        PDFをダウンロード
-      </button>
+          <div className="pamphlet-grid">
+            {data.sections.map((sec, idx) => (
+              <section className="pamphlet-section spot-card" key={idx}>
+                <div className="spot-card-header">
+                  <h3 className="spot-title">{sec.heading}</h3>
+                </div>
+                <div className="spot-card-body">
+                  <p>{sec.text}</p>
+                </div>
+              </section>
+            ))}
+          </div>
+        </div>
+      </main>
     </div>
   );
 };

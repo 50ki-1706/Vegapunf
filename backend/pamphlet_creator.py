@@ -36,7 +36,7 @@ def run_pamphlet_agent(
 
     手順:
     1. まず、興味のあるジャンルに基づいて、どのようなキーワードで周辺情報を検索すべきか計画を立ててください。
-    2. `call_nearby_search` ツールを複数回使用して、計画に沿った情報収集を行ってください。
+    2. `call_nearby_search` ツールを8回使用して、計画に沿った情報収集を行ってください。
     3. 収集した情報が十分だと判断したら、それらの情報を基に魅力的なパンフレットコンテンツ（タイトル、導入文、スポットごとの紹介文）を作成してください。
     4. 最後に、完成したパンフレットの全データを `submit_pamphlet` 関数を呼び出して提出してください。""".format(
         location_name, ", ".join(genres)
@@ -47,7 +47,7 @@ def run_pamphlet_agent(
     ]
 
     # 最大5回の対話ループで、無限ループを防ぐ
-    for _ in range(5):
+    for _ in range(10):
         print(f"\n--- Agent Turn {_ + 1} ---")
         # 1. AIに関数定義を渡して、次の行動を決めさせる
         response = gpt.call_chat_completions(
