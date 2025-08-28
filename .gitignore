@@ -26,3 +26,4 @@ dist-ssr
 .mypy_cache
 backend/__pycache__/
 backend/.env
+backend/venv/
