@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import './Pamphlet.css';
+import './pamphlet.css';
 
 const PamphletPage = () => {
   // React Router の location.state からデータを受け取る
@@ -15,14 +15,14 @@ const PamphletPage = () => {
       {
         heading: 'セクション1',
         text: 'テキスト本文1...',
-        image: 'https://via.placeholder.com/300x200'
+        image: 'https://via.placeholder.com/300x200',
       },
       {
         heading: 'セクション2',
         text: 'テキスト本文2...',
-        image: 'https://via.placeholder.com/300x200'
-      }
-    ]
+        image: 'https://via.placeholder.com/300x200',
+      },
+    ],
   };
 
   // PDF に変換する対象の DOM
@@ -35,9 +35,9 @@ const PamphletPage = () => {
     const imgData = canvas.toDataURL('image/png');
     // jsPDF で PDF 化
     const pdf = new jsPDF({
-      unit: 'pt',         // pt = point (1/72 inch)
-      format: 'a4',       // A4 サイズ
-      orientation: 'portrait'
+      unit: 'pt', // pt = point (1/72 inch)
+      format: 'a4', // A4 サイズ
+      orientation: 'portrait',
     });
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
