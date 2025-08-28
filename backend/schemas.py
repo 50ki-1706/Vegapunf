@@ -84,3 +84,11 @@ class PamphletResponse(BaseModel):
     spots: List[PamphletSpot] = Field(
         [], description="パンフレットに掲載するスポットのリスト"
     )
+
+
+class PlaceNameRequest(BaseModel):
+    """
+    場所の名前をリクエストするためのスキーマ
+    """
+
+    place_name: str = Field(..., description="座標を検索したい場所の名前", example="東京タワー")
