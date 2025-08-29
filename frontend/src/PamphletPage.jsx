@@ -86,6 +86,7 @@ const PamphletPage = () => {
         </button>
       </header>
 
+
       <main className="pamphlet-main">
         <div className="pamphlet-container" ref={pamphletRef}>
           <div className="pamphlet-cover">
