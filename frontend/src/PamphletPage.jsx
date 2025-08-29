@@ -97,7 +97,6 @@ const PamphletPage = () => {
               <p>{data.description}</p>
             </section>
           )}
-
           <div className="pamphlet-grid">
             {data.sections.map((sec, idx) => (
               <section className="pamphlet-section spot-card" key={idx}>
