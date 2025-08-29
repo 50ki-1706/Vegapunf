@@ -47,7 +47,7 @@ def run_pamphlet_agent(
     ]
 
     # 最大5回の対話ループで、無限ループを防ぐ
-    for _ in range(5):
+    for _ in range(10):
         print(f"\n--- Agent Turn {_ + 1} ---")
         # 1. AIに関数定義を渡して、次の行動を決めさせる
         response = gpt.call_chat_completions(

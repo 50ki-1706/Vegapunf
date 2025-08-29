@@ -1,141 +1,115 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './InputPage.css';
 
+// 選択可能なジャンルを定義
+const AVAILABLE_GENRES = ['自然', '歴史文化', '食事', 'エンタメ', 'ショッピング'];
+
 const InputPage = () => {
+  const [location, setLocation] = useState('');
+  const [selectedGenres, setSelectedGenres] = useState(new Set());
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // フォームのステート
-  const [location, setLocation] = useState("");
-  const [selectedGenres, setSelectedGenres] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  // ジャンルの候補
-  const genres = ["自然", "歴史・文化", "グルメ", "アクティビティ", "癒し", "イベント", "動植物", "ショッピング"];
-
-  // ジャンルボタンクリック時のトグル処理
-  const handleGenreClick = (genre) => {
-    setSelectedGenres((prev) =>
-      prev.includes(genre)
-        ? prev.filter((g) => g !== genre)
-        : [...prev, genre]
-    );
+  // ジャンル選択のハンドラ
+  const handleGenreChange = (genre) => {
+    const newGenres = new Set(selectedGenres);
+    if (newGenres.has(genre)) {
+      newGenres.delete(genre);
+    } else {
+      newGenres.add(genre);
+    }
+    setSelectedGenres(newGenres);
   };
 
-  // 送信ボタン押下時
-  const handleSubmit = async () => {
+  // フォーム送信のハンドラ
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!location) {
-      alert("観光地名を入力してください");
+      setError('観光地の名称を入力してください。');
       return;
     }
-    if (selectedGenres.length === 0) {
-      alert("少なくとも1つのジャンルを選択してください");
+    if (selectedGenres.size === 0) {
+      setError('ジャンルを1つ以上選択してください。');
       return;
     }
 
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setError('');
 
     try {
-      const res = await axios.post("http://localhost:8000/create-pamphlet", {
+      const requestBody = {
         location: location,
-        genres: selectedGenres,
-      });
+        genres: Array.from(selectedGenres),
+      };
 
-      // APIレスポンスを受け取ったらパンフレットページへ遷移
-      navigate("/pamphlet", {
-        state: {
-          pamphletData: res.data,
-        },
-      });
+      console.log('APIにリクエストを送信します:', requestBody);
+
+      // バックエンドのAPIを呼び出す
+      const response = await axios.post('http://127.0.0.1:8000/make-pamphlet', requestBody);
+
+      console.log('APIからレスポンスを受信しました:', response.data);
+
+      // 成功したら、結果を持ってパンフレットページに遷移
+      navigate('/pamphlet', { state: { pamphletData: response.data } });
     } catch (err) {
-      console.error(err);
-      setError("パンフレットの作成に失敗しました。再度お試しください。");
+      console.error('API呼び出し中にエラーが発生しました:', err);
+      const errorMessage =
+        err.response?.data?.detail ||
+        'パンフレットの作成に失敗しました。サーバーのログを確認してください。';
+      setError(errorMessage);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  // ローディング中はメッセージ表示のみ
-  if (loading) {
-    return (
-      <div style={{ textAlign: "center", marginTop: "2rem" }}>
-        <p>パンフレット作成中...</p>
-        {/* ここにスピナーなどを入れてもOK */}
-      </div>
-    );
-  }
-
   return (
-    <div style={{ maxWidth: "600px", margin: "2rem auto", padding: "1rem" }}>
-      <h2>ベガパンフ</h2>
-      <p id="exp">観光地名とジャンルを選択して、オリジナルパンフレットを作成しましょう！</p>
-      {/* 観光地入力 */}
-      <div style={{ marginBottom: "1rem" }}>
-        <label>
-          観光地名：
+    <div className="input-page">
+      <h1>旅のパンフレットを自動作成</h1>
+      <p>
+        好きな観光地と興味のあるジャンルを選ぶだけで、
+        <br />
+        AIがあなただけのオリジナルパンフレットを作成します。
+      </p>
+
+      <form onSubmit={handleSubmit} className="pamphlet-form">
+        <div className="form-group">
+          <label htmlFor="location">観光地の名称</label>
           <input
+            id="location"
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            placeholder="東京タワー"
-            style={{ marginLeft: "0.5rem", padding: "0.5rem", width: "70%" }}
+            placeholder="例: 沖縄 美ら海水族館"
+            disabled={isLoading}
           />
-        </label>
-      </div>
-
-      {/* ジャンル選択 */}
-      <div style={{ marginBottom: "1rem" }}>
-        <p>ジャンルを選択：</p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-          {genres.map((g) => {
-            const isSelected = selectedGenres.includes(g);
-            return (
-              <button
-                key={g}
-                type="button"
-                onClick={() => handleGenreClick(g)}
-                style={{
-                  padding: "0.5rem 1rem",
-                  border: "1px solid #333",
-                  borderRadius: "4px",
-                  backgroundColor: isSelected ? "#5fe08aff" : "#f0f0f0",
-                  color: isSelected ? "#fff" : "#000",
-                  cursor: "pointer",
-                }}
-              >
-                {g}
-              </button>
-            );
-          })}
         </div>
-      </div>
 
-      {/* エラー表示 */}
-      {error && (
-        <div style={{ color: "red", marginBottom: "1rem" }}>{error}</div>
-      )}
+        <div className="form-group">
+          <label>興味のあるジャンル（複数選択可）</label>
+          <div className="genre-tags">
+            {AVAILABLE_GENRES.map((genre) => (
+              <button
+                type="button"
+                key={genre}
+                className={`genre-tag ${selectedGenres.has(genre) ? 'selected' : ''}`}
+                onClick={() => handleGenreChange(genre)}
+                disabled={isLoading}
+              >
+                {genre}
+              </button>
+            ))}
+          </div>
+        </div>
 
-      {/* 送信ボタン */}
-      <div>
-        <button
-          type="button"
-          onClick={handleSubmit}
-          style={{
-            padding: "0.75rem 1.5rem",
-            fontSize: "1rem",
-            backgroundColor: "#5ca7f7ff",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          パンフレットを作成
+        {error && <p className="error-message">{error}</p>}
+
+        <button type="submit" className="submit-btn" disabled={isLoading}>
+          {isLoading ? 'AIが作成中...' : 'パンフレットを作成'}
         </button>
-      </div>
+      </form>
     </div>
   );
 };

@@ -1,134 +1,239 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
+/* Base styles */
+:root {
+  --primary-color: #4a90e2;
+  --background-color: #f7f9fc;
+  --text-color: #333;
+  --card-background: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --border-color: #e0e0e0;
 }
 
-.pamphlet-container {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 1rem;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+body {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+  margin: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
+
+/* Page layout */
+.pamphlet-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .pamphlet-header {
-  text-align: center;
-  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--card-background);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .pamphlet-header h1 {
   margin: 0;
-  font-size: 2.5rem;
-  color: #333;
+  font-size: 1.5rem;
+  color: var(--primary-color);
 }
 
-.pamphlet-section {
-  margin-bottom: 1.5rem;
+.pamphlet-main {
+  flex-grow: 1;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
 }
 
-.pamphlet-section h2 {
-  font-size: 1.8rem;
+/* Pamphlet container */
+.pamphlet-container {
+  width: 100%;
+  max-width: 820px; /* A4-like ratio */
+  background: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+/* Cover section */
+.pamphlet-cover {
+  text-align: center;
+  padding: 3rem 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.pamphlet-title {
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+/* Description section */
+.description-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #fdfdff;
+  border-left: 4px solid var(--primary-color);
+  border-radius: 4px;
+}
+
+.description-section p {
+  font-size: 1.1rem;
+  line-height: 1.7;
   color: #555;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 0.5rem;
+  margin: 0;
 }
 
-.pamphlet-section p {
-  font-size: 1rem;
+/* Spots grid layout */
+.pamphlet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Spot card styles */
+.spot-card {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.spot-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px var(--shadow-color);
+}
+
+.spot-card-header {
+  padding: 1rem 1.5rem;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.spot-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--primary-color);
+}
+
+.spot-card-body {
+  padding: 1.5rem;
+  flex-grow: 1;
+}
+
+.spot-card-body p {
+  margin: 0;
   line-height: 1.6;
   color: #666;
 }
 
-.pamphlet-section ul {
-  list-style-type: disc;
-  padding-left: 1.5rem;
+/* PDF export button */
+.btn-export {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.pamphlet-section ul li {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
+.btn-export:hover {
+  background-color: #3a7ac8;
+  transform: translateY(-2px);
+}
+
+/* Loading state */
+.pamphlet-page.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.loading-container .spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-left-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+.loading-container p {
+  font-size: 1.1rem;
   color: #666;
 }
 
-.pamphlet-footer {
-  text-align: center;
-  font-size: 0.9rem;
-  color: #999;
-  border-top: 1px solid #eee;
-  padding-top: 1rem;
-}
-
-.pamphlet-footer a {
-  color: #007bff;
+.loading-container a {
+  color: var(--primary-color);
   text-decoration: none;
 }
-
-.pamphlet-footer a:hover {
+.loading-container a:hover {
   text-decoration: underline;
 }
 
-@media (max-width: 600px) {
-  .pamphlet-container {
-    padding: 0.5rem;
-    margin: 1rem;
-  }
-
-  .pamphlet-header h1 {
-    font-size: 1rem;
-  }
-
-  .pamphlet-section h2 {
-    font-size: 1.5rem;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
-@media print {
-  body {
-    background: white;
-  }
-  .pamphlet-container {
-    box-shadow: none;
-    margin: 0;
-    padding: 0;
-    border-radius: 0;
-  }
+/* PDF Export specific styles */
+.pdf-export-mode {
+  box-shadow: none;
+  border-radius: 0;
+  padding: 40pt;
+  max-width: none;
+  width: 595pt; /* A4 width in points */
 }
-
-/* Additional styles for PDF generation */
-.pamphlet-pdf {
-  width: 210mm; /* A4 width */
-  min-height: 297mm; /* A4 height */
-  padding: 20mm;
-  box-sizing: border-box;
-  background: white;
+.pdf-export-mode .pamphlet-title {
+  font-size: 28pt;
 }
-
-.pamphlet-pdf .pamphlet-header,
-.pamphlet-pdf .pamphlet-section,
-.pamphlet-pdf .pamphlet-footer {
-  margin-bottom: 1.5rem;
-} 
-
-.pamphlet-pdf .pamphlet-header h1 {
-  font-size: 24pt;
-}
-
-.pamphlet-pdf .pamphlet-section h2 {
-  font-size: 18pt;
-}
-
-.pamphlet-pdf .pamphlet-section p,
-.pamphlet-pdf .pamphlet-section ul li {
+.pdf-export-mode .description-section p {
   font-size: 12pt;
-  line-height: 1.5;
+}
+.pdf-export-mode .spot-title {
+  font-size: 16pt;
+}
+.pdf-export-mode .spot-card-body p {
+  font-size: 11pt;
 }
 
-.pamphlet-pdf .pamphlet-footer {
-  font-size: 10pt;
+/* Ensure cards don't break across pages */
+.pdf-export-mode .spot-card {
+  page-break-inside: avoid;
 }
 
-.pamphlet-pdf .pamphlet-footer a {
-  color: #007bff;
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .pamphlet-header {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .pamphlet-main {
+    padding: 1rem;
+  }
+  .pamphlet-container {
+    padding: 1.5rem;
+  }
+  .pamphlet-title {
+    font-size: 2.2rem;
+  }
+  .pamphlet-grid {
+    grid-template-columns: 1fr;
+  }
 }
